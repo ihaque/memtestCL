@@ -1,0 +1,26 @@
+POPT_DIR:=popt/osx
+DEFINES:=-DOSX
+INCLUDES:=-I$(POPT_DIR)
+LIBDIRS:=-L$(POPT_DIR)
+CFLAGS:=-O2 -g -Wall $(DEFINES) $(INCLUDES) $(LIBDIRS) -framework OpenCL -m32
+CXX=g++
+CPP=cpp
+
+all: memtestCL-nocomm
+
+clean:
+	rm -f *.o
+	rm -f *.clh
+	rm -f memtestCL-nocomm
+	rm -f internal/*.o
+
+memtestCL_kernels.clh: memtestCL_kernels.cl
+	$(CPP) memtestCL_kernels.cl > memtestCL_kernels
+	xxd -i memtestCL_kernels > memtestCL_kernels.clh
+	rm memtestCL_kernels
+
+memtestCL_core.o: memtestCL_core.cpp memtestCL_core.h memtestCL_kernels.clh
+	$(CXX) -c $(CFLAGS) -o memtestCL_core.o memtestCL_core.cpp
+
+memtestCL-nocomm: memtestCL_core.o memtestCL_cli.cpp
+	$(CXX) $(CFLAGS) -o memtestCL-nocomm memtestCL_core.o memtestCL_cli.cpp -liconv -lpopt -lpthread
