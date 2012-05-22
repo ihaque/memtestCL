@@ -1,9 +1,7 @@
-README for MemtestCL open source edition
-Version 1.00
-Imran Haque
-12 Aug 2010
+# MemtestCL open source edition
 
-CONTENTS
+## CONTENTS
+
 1. Description
 2. How to build
 3. Using MemtestCL as a library
@@ -13,7 +11,7 @@ CONTENTS
 7. Licensing
 
 
-1. DESCRIPTION
+## DESCRIPTION
 
 MemtestCL is a program to test the memory and logic of OpenCL-enabled
 GPUs, CPUs, and accelerators for errors. It is an OpenCL port of our CUDA-
@@ -35,7 +33,7 @@ as a source package.
 
 This document concerns the open-source version.
 
-2. HOW TO BUILD
+## HOW TO BUILD
 
 First, ensure that you have installed an OpenCL SDK (typically, either that in
 the NVIDIA CUDA toolkits (from 3.0 onwards) or the ATI Stream SDK. Binaries
@@ -48,13 +46,17 @@ Makefiles for 32- and 64-bit Linux, Mac OS X, and 32-bit Windows are included
 On Linux and OSX, it should be possible to build MemtestCL by executing the 
 following from the root of the source package:
 
+```
     make -f Makefiles/Makefile.OS
+```
 
 where OS is one of linux32, linux64, osx. On Windows, the Visual Studio C++
 compiler and make system is required (tested under VS2005); execute the
 following command to build:
 
+```
     nmake -f Makefiles\Makefile.windows
+```
 
 The resulting executable, memtestCL, should be immediately executable
 on Linux and OS X platforms. On Windows, libiconv-2.dll, libintl-2.dll, and
@@ -64,7 +66,7 @@ MemtestCL uses the MIT/X licensed popt library to handle command line
 arguments; precompiled static libraries are provided for Linux and OS X, but
 dynamic libraries for Windows.
 
-3. USING MEMTESTCL AS A LIBRARY
+## USING MEMTESTCL AS A LIBRARY
 
 We encourage software developers to use MemtestCL as a code library in their
 programs to verify the correct operation of hardware on which they execute. The
@@ -79,10 +81,12 @@ wrapper around the underlyinh OpenCL kernel invocations), and a high-level API
 defined by the memtestState and memtestMultiTester classes. At the lowest level
 the tests are implemented by the kernels in memtestCL_kernels.cl.
 
-The recommended interface is the memtestMultiTester class, which automatically encapsulates details such as the maximum per-buffer allocation in a particular OCL library. An example of the API's usage can be found in the standalone tester,
+The recommended interface is the memtestMultiTester class, which automatically
+encapsulates details such as the maximum per-buffer allocation in a particular
+OCL library. An example of the API's usage can be found in the standalone tester,
 memtestCL_cli.cu.
 
-4. CLI STANDALONE BASIC USAGE
+## CLI STANDALONE BASIC USAGE
 
 MemtestCL is available for Windows, Linux, and Mac OS X-based machines. In the
 following directions, please replace "MemtestCL" with the name of the program
@@ -92,7 +96,9 @@ MemtestCL is a command line application; to run it, start it from a command
 prompt (Start->Run->cmd in Windows, Terminal.app in OS X). For basic operation,
 just run it from the command prompt:
 
-    MemtestCL
+```
+    memtestcl
+```
 
 By default, MemtestCL will test 128 megabytes of memory on the first OpenCL
 device on the first OpenCL platform found,running 50 iterations of its tests.
@@ -101,12 +107,16 @@ these parameters (the speed will vary both with the speed of the card tested
 and the amount of memory tested). The amount of memory tested and number of 
 test iterations can be modified by adding command line parameters as follows:
 
-    MemtestCL [amount of RAM in megabytes] [number of test iterations]
+```
+    memtestcl [amount of RAM in megabytes] [number of test iterations]
+```
 
 For example, to run MemtestCL over 256 megabytes of RAM, with 100 test
 iterations, execute the following command:
     
-    MemtestCL 256 100
+```
+    memtestcl 256 100
+```
 
 Be aware that not all of the memory on your video card can be tested, as part
 of it is reserved for use by the operating system, and (as of this writing)
@@ -127,7 +137,7 @@ testing, we have found that even "problematic" cards may only fail sporadically
 to properly verify stability MemtestCL should be run for an extended period of
 time.
 
-5. CLI STANDALONE ADVANCED USAGE
+## CLI STANDALONE ADVANCED USAGE
 
 MemtestCL supports the use of various command line flags to enable
 advanced functionality. Flags may be issued in any order, and may precede
@@ -141,8 +151,10 @@ you do not know the index of the OpenCL platform you want, just run MemtestCL
 with no parameters - a list of all platforms found will be printed immediately
 following the usage summary. For example, to run MemtestCL on the second
 platform in a system:
-    
-    MemtestCL --platform 1
+  
+```  
+    memtestcl --platform 1
+```
 
 To run MemtestCL on an OpenCL device (e.g., GPU) other than the first one on
 the selected platform, use the --gpu or -g flags, passing the index of the
@@ -150,8 +162,10 @@ device to test (starting at zero). MemtestCL prints a list of all devices on
 the selected platform (and their indices) before running tests. For example,
 to run MemtestCL on the third OpenCL device on the default platform (platform
 index 0):
-    
-    MemtestCL --gpu 2
+
+```
+    memtestcl --gpu 2
+```
 
 The --platform and --gpu flags may be combined, to select a different platform
 and device. This may be necessary in multi-vendor or multi-GPU configurations.
@@ -159,34 +173,18 @@ Refer to the list of platforms and devices on the current platform printed at
 program start to determine the right combination. To select the third GPU on
 the second platform:
 
-    MemtestCL --platform 1 --gpu 2
-
-At the beginning of test execution, MemtestCL issues a prompt to receive
-consent to transmit the results of test data back to Stanford. No personally
-identifying information is transmitted. To assist in automation, this answer
-can be provided at the command prompt. To implicitly answer "yes" (that is, to
-transmit results back), use the --forcecomm or -f options:
-    
-    MemtestCL --forcecomm
-
-To implicitly answer "no" (that is, to forbid the tester from communicating
-with Stanford) use the --bancomm or -b options:
-
-    MemtestCL --bancomm
-
-If transmitting data back to Stanford, the memory and core (non-shader) clock
-speeds of the card are very useful data. The tester will normally prompt for
-these. To provide them at the command line, use the --coreclock/-c and
---ramclock/-r options:
-
-    MemtestCL --forcecomm --ramclock 700 --coreclock 650
+```
+    memtestcl --platform 1 --gpu 2
+```
 
 Finally, to display the license agreement for MemtestCL, provide the --license
 or -l options:
 
-    MemtestCL -l
+```
+    memtestcl -l
+```
 
-6. Frequently Asked Questions
+## Frequently Asked Questions
 
     - I have an {ATI 2xxx/3xxx ,NVIDIA 5/6/7-series} video card and it doesn't
       work!
@@ -211,12 +209,13 @@ or -l options:
           (http://developer.amd.com/gpu/atistreamsdk/). For CPU support,
           installing only the ATI Stream SDK is sufficient.
 
-6. Licensing
+## Licensing
 
 The source code to the open-source edition of MemtestCL is Copyright 2010,
 Stanford University, and is licensed under the terms of the GNU Lesser General
 Public License, version 3, reproduced below:
 
+```
 		   GNU LESSER GENERAL PUBLIC LICENSE
                        Version 3, 29 June 2007
 
@@ -382,3 +381,4 @@ whether future versions of the GNU Lesser General Public License shall
 apply, that proxy's public statement of acceptance of any version is
 permanent authorization for you to choose that version for the
 Library.
+````
