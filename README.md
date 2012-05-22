@@ -186,28 +186,27 @@ or -l options:
 
 ## Frequently Asked Questions
 
-    - I have an {ATI 2xxx/3xxx ,NVIDIA 5/6/7-series} video card and it doesn't
-      work!
-        - Only OpenCL-capable hardware is supported. As of this writing, this
-          includes any NVIDIA GeForce 8-series or newer graphics cards (e.g.,
-          GeForce 8-, 9-, GT- GTS-, GTX-series; Quadro FX, and Tesla boards),
-          and the ATI Radeon 4xxx and 5xxx-series graphics cards. MemtestCL
-          has also been tested on Intel and AMD CPUs using the AMD OpenCL
-          implementation. OpenCL implementations exist for the Cell processor,
-          but this has not been tested.
+- I have an {ATI 2xxx/3xxx ,NVIDIA 5/6/7-series} video card and it doesn't work!
+    * Only OpenCL-capable hardware is supported. As of this writing, this
+      includes any NVIDIA GeForce 8-series or newer graphics cards (e.g.,
+      GeForce 8-, 9-, GT- GTS-, GTX-series; Quadro FX, and Tesla boards),
+      and the ATI Radeon 4xxx and 5xxx-series graphics cards. MemtestCL
+      has also been tested on Intel and AMD CPUs using the AMD OpenCL
+      implementation. OpenCL implementations exist for the Cell processor,
+      but this has not been tested.
 
-    - I have an OpenCL-enabled card, but it still doesn't work!
-        - You must have an OpenCL-enabled graphics driver and OpenCL runtime
-          installed. For NVIDIA hardware, this requires a version 195 ForceWare
-          driver or newer; ATI requires BOTH a v9.12 or newer Catalyst driver,
-          as well as (at the time of writing) the ATI Stream SDK.
-        
-    - I get an error complaining about a missing "OpenCL.dll" on Windows!
-        - You must install OpenCL. NVIDIA bundles OpenCL.dll with recent
-          (v195 or newer) drivers. For ATI GPUs, you must install an OpenCL-
-          capable video driver, and also install the ATI Stream SDK
-          (http://developer.amd.com/gpu/atistreamsdk/). For CPU support,
-          installing only the ATI Stream SDK is sufficient.
+- I have an OpenCL-enabled card, but it still doesn't work!
+    * You must have an OpenCL-enabled graphics driver and OpenCL runtime
+      installed. For NVIDIA hardware, this requires a version 195 ForceWare
+      driver or newer; ATI requires BOTH a v9.12 or newer Catalyst driver,
+      as well as (at the time of writing) the ATI Stream SDK.
+    
+- I get an error complaining about a missing "OpenCL.dll" on Windows!
+    * You must install OpenCL. NVIDIA bundles OpenCL.dll with recent
+      (v195 or newer) drivers. For ATI GPUs, you must install an OpenCL-
+      capable video driver, and also install the ATI Stream SDK
+      (http://developer.amd.com/gpu/atistreamsdk/). For CPU support,
+      installing only the ATI Stream SDK is sufficient.
 
 ## Licensing
 
