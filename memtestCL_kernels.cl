@@ -340,6 +340,9 @@ __kernel void deviceWriteRandomBlocks(__global uint* base,uint N,int seed,__loca
         // Set the seed for the next round to the last number calculated in this round
         seed = randomBlock[blockDim-1];
 
+        // Prevent a race condition in which last work-item can overwrite seed before others have read it
+        barrier(CLK_LOCAL_MEM_FENCE);
+        
         // Blit shmem block out to global memory
         *(THREAD_ADDRESS(base,N,i)) = randomBlock[threadIdx];
     }
