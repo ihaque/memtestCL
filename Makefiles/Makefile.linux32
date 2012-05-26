@@ -5,7 +5,7 @@ OPENCL_DIR:=/usr/local/cuda
 OPENCL_INC:=$(OPENCL_DIR)/include
 endif
 ifeq "$(OPENCL_VENDOR)" "AMD"
-OPENCL_DIR:=/usr/local/streamsdk
+OPENCL_DIR:=$(AMDAPPSDKROOT)
 OPENCL_INC:=$(OPENCL_DIR)/include
 endif
 INCLUDES:=-I$(OPENCL_INC) -I$(POPT_DIR)
