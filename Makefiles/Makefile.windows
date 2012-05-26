@@ -27,7 +27,7 @@ CFLAGS=-MT -Ox -EHsc $(DEFINES) $(INCLUDES) # -MTd -Zi for debug, -MT -Ox for pr
 CXX=cl
 CPP=cl /E
 
-all: memtestCL-nocomm.exe
+all: memtestCL.exe
 
 clean:
 	del *.obj
@@ -45,5 +45,5 @@ memtestCL_kernels.clh: memtestCL_kernels.cl xxd.exe
 memtestCL_core.obj: memtestCL_core.cpp memtestCL_core.h memtestCL_kernels.clh
 	$(CXX) $(CFLAGS) -c memtestCL_core.cpp
 
-memtestCL-nocomm.exe: memtestCL_core.obj memtestCL_cli.cpp
-	$(CXX) $(CFLAGS) memtestCL_core.obj memtestCL_cli.cpp -link $(LIBS) -OUT:memtestCL-nocomm.exe
+memtestCL.exe: memtestCL_core.obj memtestCL_cli.cpp
+	$(CXX) $(CFLAGS) memtestCL_core.obj memtestCL_cli.cpp -link $(LIBS) -OUT:memtestCL.exe

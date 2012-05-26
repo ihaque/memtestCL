@@ -16,12 +16,12 @@ CFLAGS:=-O2 -Wall $(DEFINES) $(INCLUDES) $(LIBDIRS)
 CXX=g++
 CPP=cpp
 
-all: memtestCL-nocomm
+all: memtestCL
 
 clean:
 	rm -f *.o
 	rm -f *.clh
-	rm -f memtestCL-nocomm
+	rm -f memtestCL
 
 memtestCL_kernels.clh: memtestCL_kernels.cl
 	$(CPP) memtestCL_kernels.cl > memtestCL_kernels
@@ -31,5 +31,5 @@ memtestCL_kernels.clh: memtestCL_kernels.cl
 memtestCL_core.o: memtestCL_core.cpp memtestCL_core.h memtestCL_kernels.clh
 	$(CXX) -c $(CFLAGS) -o memtestCL_core.o memtestCL_core.cpp
 
-memtestCL-nocomm: memtestCL_core.o memtestCL_cli.cpp
-	$(CXX) $(CFLAGS) -o memtestCL-nocomm memtestCL_core.o memtestCL_cli.cpp -lpopt -lOpenCL -lpthread
+memtestCL: memtestCL_core.o memtestCL_cli.cpp
+	$(CXX) $(CFLAGS) -o memtestCL memtestCL_core.o memtestCL_cli.cpp -lpopt -lOpenCL -lpthread
