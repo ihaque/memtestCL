@@ -49,14 +49,14 @@ bool validateNumeric(const char* str) { //{{{
 
 int getint_range(const char* prompt,const int min,const int max)
 { //{{{
-    int sel;
+    int sel, scanf_rv;
     if (!isatty(fileno(stdout))) {
         return min;
     }
     do {
         printf("%s (%d - %d): ",prompt,min,max);
-        scanf("%d",&sel);
-    } while (sel < min || sel > max);
+        scanf_rv = scanf("%d",&sel);
+    } while (scanf_rv < 1 || sel < min || sel > max);
     getchar(); // Consume the extra newline in stdin
     return sel;
 } //}}}
