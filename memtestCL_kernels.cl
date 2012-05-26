@@ -437,9 +437,9 @@ __kernel void deviceWritePairedModulo(__global uint* base,const uint N,const uin
         }
     }
     M20_SYNC();
-    row = startrow;
-    col = startcol;
     for (uint j = 0; j < iters; j++) {
+        row = startrow;
+        col = startcol;
         for (uint i = 0 ; i < N; i++) {
             offset = row * modulus + col;
             if (col != shift) *(base+offset) = pattern2;
@@ -463,7 +463,6 @@ __kernel void deviceVerifyPairedModulo(__global uint* base,uint N,const uint shi
     
     for (uint i = 0; i < N; i++) {
         offset = THREAD_OFFSET(N,i);
-        //if (((offset % modulus) == shift) && (*(base+offset) != pattern1)) threadErrorCount[threadIdx]++;
         if ((offset % modulus) == shift) threadErrorCount[threadIdx] += BITSDIFF(*(base+offset),pattern1);
     }
     // Parallel-reduce error counts over threads in block
