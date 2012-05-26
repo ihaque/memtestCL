@@ -183,7 +183,7 @@ void parse_options(int argc,const char** argv,uint& megsToTest,uint& maxIters,in
 void initialize_CL(cl_platform_id &plat,cl_context& ctx,cl_device_id& dev,int& device_idx_selected,int& platform_idx_selected) { //{{{
     // Set up CL
     cl_platform_id platforms[16];
-    uint num_platforms;
+    cl_uint num_platforms;
     clGetPlatformIDs(16,platforms,&num_platforms);
     if (num_platforms == 0) {
         printf("Error: No OpenCL platforms available.\n");
