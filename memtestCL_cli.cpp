@@ -558,7 +558,7 @@ int main(int argc,const char** argv) {
         printf("-----------------------------------------\n");
         printf("%u iterations over %u MiB of memory on device %s\n",iter,tester.size(),devname);
         for (int i = 0; i < 13; i++) {
-            printf("% 40s: %d failed iterations\n",testnames[i],iterErrorCounts[i]);
+            printf("%40s: %d failed iterations\n",testnames[i],iterErrorCounts[i]);
 	    printf("                                         (%d total incorrect bits)\n",errorCounts[i]);
         }
         if (itersfailed)
