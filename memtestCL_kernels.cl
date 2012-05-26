@@ -28,7 +28,7 @@
 #define blockIdx get_group_id(0)
 #define blockDim get_local_size(0)
 
-#define OLD_M20_SYNC
+//#define OLD_M20_SYNC
 #define MODX_WITHOUT_MOD
 
 #ifdef OLD_M20_SYNC
