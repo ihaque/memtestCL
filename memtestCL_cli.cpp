@@ -191,7 +191,7 @@ void initialize_CL(cl_platform_id &plat,cl_context& ctx,cl_device_id& dev,int& d
     }
     if (platform_idx_selected == -1 && num_platforms == 1) platform_idx_selected = 0;
     printf ("Available OpenCL platforms:\n");
-    for (uint i = 0; i < num_platforms; i++) {
+    for (int i = 0; i < (int) num_platforms; i++) {
         char platname[256];
         size_t namesize;
         clGetPlatformInfo(platforms[i],CL_PLATFORM_NAME,256,platname,&namesize);
@@ -216,7 +216,7 @@ void initialize_CL(cl_platform_id &plat,cl_context& ctx,cl_device_id& dev,int& d
 
     if (device_idx_selected == -1 && num_devices == 1) device_idx_selected = 0;
     printf ("Available OpenCL devices on selected platform:\n");
-    for (uint i = 0; i < num_devices;i++) {
+    for (int i = 0; i < (int) num_devices;i++) {
         char devname[256];
         size_t namesize;
         clGetDeviceInfo(devids[i],CL_DEVICE_NAME,256,devname,&namesize);
@@ -228,7 +228,7 @@ void initialize_CL(cl_platform_id &plat,cl_context& ctx,cl_device_id& dev,int& d
     if (device_idx_selected < 0)
         device_idx_selected = getint_range("Please select a device",0,num_devices-1);
     // Sanity check device ID
-    if (device_idx_selected >= num_devices) {
+    if (device_idx_selected >= (int) num_devices) {
         printf("Error: Specified invalid device index (%d); %d OpenCL devices present on selected platform, numbered from zero\n",device_idx_selected,num_devices);
         exit(2);
     }
