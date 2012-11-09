@@ -370,7 +370,9 @@ __kernel void deviceVerifyRandomBlocks(__global uint* base,uint N,int seed,__glo
         // Set the seed for the next round to the last number calculated in this round
         seed = randomBlock[blockDim-1];
         
-        //if ( randomBlock[threadIdx] != *(THREAD_ADDRESS(base,N,i))) threadErrorCount[threadIdx]++;
+        // Prevent a race condition in which last work-item can overwrite seed before others have read it
+        barrier(CLK_LOCAL_MEM_FENCE);
+        
         threadErrorCount[threadIdx] += BITSDIFF(*(THREAD_ADDRESS(base,N,i)),randomBlock[threadIdx]);
         
     }
