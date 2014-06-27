@@ -1,25 +1,30 @@
 POPT_DIR=popt/win32
 OPENCL_VENDOR=AMD # NV, NV64, AMD, AMD64
+
 !if "$(OPENCL_VENDOR)" == "NV"
 OPENCL_DIR="\CUDA"
 OPENCL_INC=$(OPENCL_DIR)\include
 OPENCL_LIB=$(OPENCL_DIR)\lib\OpenCL.lib
 !endif
+
 !if "$(OPENCL_VENDOR)" == "NV64"
 OPENCL_DIR="\CUDA"
 OPENCL_INC=$(OPENCL_DIR)\include
 OPENCL_LIB=$(OPENCL_DIR)\lib64\OpenCL.lib
 !endif
+
 !if "$(OPENCL_VENDOR)" == "AMD"
-OPENCL_DIR="\Program Files\ATI Stream"
+OPENCL_DIR="\Program Files (x86)\AMD APP"
 OPENCL_INC=$(OPENCL_DIR)\include
 OPENCL_LIB=$(OPENCL_DIR)\lib\x86\OpenCL.lib
 !endif
+
 !if "$(OPENCL_VENDOR)" == "AMD64"
-OPENCL_DIR="\Program Files (x86)\ATI Stream"
+OPENCL_DIR="\Program Files (x86)\AMD APP"
 OPENCL_INC=$(OPENCL_DIR)\include
-OPENCL_LIB=$(OPENCL_DIR)\lib\x86\OpenCL.lib
+OPENCL_LIB=$(OPENCL_DIR)\lib\x86_64\OpenCL.lib
 !endif
+
 LIBS=$(OPENCL_LIB) popt\win32\libpopt.lib Ws2_32.lib 
 INCLUDES=-I$(OPENCL_INC) -I$(POPT_DIR)
 DEFINES=-DWINDOWS -DCURL_STATICLIB -D_CRT_SECURE_NO_DEPRECATE
