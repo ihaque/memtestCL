@@ -1,4 +1,3 @@
-POPT_DIR:=popt/linux64
 OPENCL_VENDOR:=AMD
 ifeq "$(OPENCL_VENDOR)" "NV"
 OPENCL_DIR:=/usr/local/cuda
@@ -9,9 +8,9 @@ OPENCL_DIR:=$(AMDAPPSDKROOT)
 OPENCL_INC:=$(OPENCL_DIR)/include
 OPENCL_LIB:=$(OPENCL_DIR)/lib/x86_64
 endif
-INCLUDES:=-I$(OPENCL_INC) -I$(POPT_DIR)
+INCLUDES:=-I$(OPENCL_INC)
 DEFINES:=-DLINUX
-LIBDIRS:=-L$(POPT_DIR) -L$(OPENCL_LIB)
+LIBDIRS:=-L$ -L$(OPENCL_LIB)
 CFLAGS:=-O2 -Wall $(DEFINES) $(INCLUDES) $(LIBDIRS)
 CXX=g++
 CPP=cpp
@@ -32,4 +31,4 @@ memtestCL_core.o: memtestCL_core.cpp memtestCL_core.h memtestCL_kernels.clh
 	$(CXX) -c $(CFLAGS) -o memtestCL_core.o memtestCL_core.cpp
 
 memtestCL: memtestCL_core.o memtestCL_cli.cpp
-	$(CXX) $(CFLAGS) -o memtestCL memtestCL_core.o memtestCL_cli.cpp -lpopt -lOpenCL -lpthread
+	$(CXX) $(CFLAGS) -o memtestCL memtestCL_core.o memtestCL_cli.cpp -lOpenCL -lpthread

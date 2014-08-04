@@ -1,8 +1,5 @@
-POPT_DIR:=popt/osx
 DEFINES:=-DOSX
-INCLUDES:=-I$(POPT_DIR)
-LIBDIRS:=-L$(POPT_DIR)
-CFLAGS:=-O2 -g -Wall $(DEFINES) $(INCLUDES) $(LIBDIRS) -framework OpenCL -m32
+CFLAGS:=-O2 -g -Wall $(DEFINES) -framework OpenCL -m32
 CXX=g++
 CPP=cpp
 

@@ -16,11 +16,14 @@
 #include <assert.h>
 #include <string.h>
 #include <ctype.h>
+
+#include "ezOptionParser.hpp"
+
 #include "memtestCL_core.h"
-#include <popt.h>
 
 // For isatty
 #ifdef WINDOWS
+#define WIN32_LEAN_AND_MEAN
 #include <io.h>
 #define isatty _isatty
 #define fileno _fileno
@@ -92,93 +95,6 @@ void print_licensing(void) { //{{{
     return;
 } //}}}
 
-void parse_options(int argc,const char** argv,uint& megsToTest,uint& maxIters,int& gpuID, int& platID, int& showLicense,int& ramclock,int& coreclock,int& commAuthorized,int& commBanned) { //{{{
-    // Set up popt structures {{{
-    int nFlags = 5;
-    struct poptOption* options = new struct poptOption[nFlags+1];
-    enum arg_flags {ARG_GPU=1,ARG_PLATFORM,ARG_FORCECOMM,ARG_BANCOMM,ARG_RAMCLOCK,ARG_CORECLOCK,ARG_LICENSE,ARG_MEM,ARG_ITERS};
-    options[nFlags].longName  = NULL;
-    options[nFlags].shortName = '\0';
-    options[nFlags].argInfo   = 0;
-    options[nFlags].arg       = NULL;
-    options[nFlags].val       = 0; 
-    int optidx = 0;
-
-    options[optidx].longName  = "gpu";
-    options[optidx].shortName = 'g';
-    options[optidx].argInfo   = POPT_ARG_INT;
-    options[optidx].arg       = &gpuID;
-    options[optidx].val       = ARG_GPU;
-    optidx++;
-    options[optidx].longName  = "platform";
-    options[optidx].shortName = 'p';
-    options[optidx].argInfo   = POPT_ARG_INT;
-    options[optidx].arg       = &platID;
-    options[optidx].val       = ARG_PLATFORM;
-    optidx++;
-    options[optidx].longName  = "license";
-    options[optidx].shortName = 'l';
-    options[optidx].argInfo   = POPT_ARG_NONE;
-    options[optidx].arg       = &showLicense;
-    options[optidx].val       = ARG_LICENSE;
-    optidx++;
-    options[optidx].longName  = "mbytes";
-    options[optidx].shortName = 'm';
-    options[optidx].argInfo   = POPT_ARG_INT;
-    options[optidx].arg       = &megsToTest;
-    options[optidx].val       = ARG_MEM;
-    optidx++;
-    options[optidx].longName  = "iters";
-    options[optidx].shortName = 'i';
-    options[optidx].argInfo   = POPT_ARG_INT;
-    options[optidx].arg       = &maxIters;
-    options[optidx].val       = ARG_ITERS;
-    optidx++;
-    // }}}
-    poptContext pcon = poptGetContext(NULL,argc,argv,options,POPT_CONTEXT_NO_EXEC|POPT_CONTEXT_POSIXMEHARDER);
-    int poptrc;
-    while ((poptrc = poptGetNextOpt(pcon)) > 0){
-        //printf("popt parsed option %d\n",poptrc);
-    }
-    if (poptrc != -1) {
-        // An error occurred in parsing
-        fprintf(stderr, "%s: %s\n",poptBadOption(pcon,POPT_BADOPTION_NOALIAS),poptStrerror(poptrc));
-        exit(2);
-    }
-
-    // Parse leftover arguments (size and iteration count)
-    const char** leftovers = poptGetArgs(pcon);
-    if (leftovers != NULL && leftovers[0] != NULL) {
-        //printf("Got leftover option %s\n",leftovers[0]);
-        if (!validateNumeric(leftovers[0])) {
-            printf("Error: invalid number of MB to test \"%s\"\n",leftovers[0]);
-            exit(2);
-        }
-        sscanf(leftovers[0],"%u",&megsToTest);
-        if (leftovers[1] != NULL) {
-        //printf("Got leftover option %s\n",leftovers[1]);
-            if (!validateNumeric(leftovers[1])) {
-                printf("Error: invalid number of iterations \"%s\"\n",leftovers[1]);
-                exit(2);
-            }
-            sscanf(leftovers[1],"%u",&maxIters);
-        }
-    }
-    poptFreeContext(pcon);
-    delete[] options;
-
-    // Sanity check RAM size and iteration count
-    if (megsToTest <= 0) {
-        printf("Error: invalid memory test region size %d MiB\n",megsToTest);
-        exit(2);
-    }
-    if (maxIters <= 0) {
-        printf("Error: invalid iteration count %d\n",maxIters);
-        exit(2);
-    }
-
-    return;
-} //}}}
 
 void initialize_CL(cl_platform_id &plat,cl_context& ctx,cl_device_id& dev,int& device_idx_selected,int& platform_idx_selected) { //{{{
     // Set up CL
@@ -256,10 +172,57 @@ int main(int argc,const char** argv) {
     int commBanned=0;
     
     print_usage(); 
-    parse_options(argc,argv,megsToTest,maxIters,gpuID,platID,showLicense,ramclock,coreclock,commAuthorized,commBanned);
+    
+    ez::ezOptionParser opt;
+
+    opt.add(
+        "0", // Default.
+        0, // Required?
+        1, // Number of args expected.
+        0, // Delimiter if expecting multiple args.
+        "run test on the Nth (from 0) OpenCL platform\n", // Help description.
+        "--platform",
+        "-p"
+    );
+    
+    opt.add(
+        "0", // Default.
+        0, // Required?
+        1, // Number of args expected.
+        0, // Delimiter if expecting multiple args.
+        "run test on the Nth (from 0) OpenCL device\n", // Help description.
+        "--gpu",
+        "-g"
+    );
+
+    opt.add(
+        "", // Default.
+        0, // Required?
+        0, // Number of args expected.
+        0, // Delimiter if expecting multiple args.
+        "show license terms for this build\n", // Help description.
+        "-l",
+        "--license"
+    );
+
+    opt.parse(argc, argv);
+    std::string lastArg;
+    if(opt.isSet("-p"))
+        opt.get("-p")->getInt(platID);
+    if(opt.isSet("-g"))
+        opt.get("-g")->getInt(gpuID);
+    if(opt.isSet("-l"))
+        opt.get("-g")->getInt(showLicense);
+    if(opt.lastArgs.size() == 0) {
+        // do nothing, use default settings
+    } else if(opt.lastArgs.size() == 2) {
+        sscanf(opt.lastArgs[0]->c_str(),"%u",&megsToTest);
+        sscanf(opt.lastArgs[1]->c_str(),"%u",&maxIters);
+    } else {
+        printf("Error: Bad argument for [MB GPU RAM to test] [# iters]");
+    }
 
     if (showLicense) print_licensing();
-
 
     cl_context ctx;
     cl_device_id dev;
