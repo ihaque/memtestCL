@@ -119,7 +119,7 @@ void initialize_CL(cl_platform_id &plat,cl_context& ctx,cl_device_id& dev,int& d
         platform_idx_selected = getint_range("Please select a platform",0,num_platforms-1);
 
     cl_device_id devids[32];
-    uint num_gpu,num_cpu,num_accel,num_devices;
+    uint num_gpu = 0, num_cpu = 0, num_accel = 0, num_devices = 0;
     clGetDeviceIDs(platforms[platform_idx_selected],CL_DEVICE_TYPE_GPU,32,devids,&num_gpu);
     clGetDeviceIDs(platforms[platform_idx_selected],CL_DEVICE_TYPE_ACCELERATOR,32-num_gpu,devids+num_gpu,&num_accel);
     clGetDeviceIDs(platforms[platform_idx_selected],CL_DEVICE_TYPE_CPU,32-num_gpu-num_accel,devids+num_gpu+num_accel,&num_cpu);
