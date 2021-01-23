@@ -184,6 +184,16 @@ or -l options:
     memtestcl -l
 ```
 
+To check lots of memory on AMD cards extra environment variables can be useful,
+depending on the driver version. For example with the below settings testing
+7672MB was succesfully done on a 8GB AMD gpu w/o display on 64-bit windows.
+```
+    set GPU_MAX_HEAP_SIZE=100
+    set GPU_SINGLE_ALLOC_PERCENT=100
+    set GPU_ENABLE_LARGE_ALLOCATION=1
+
+```
+
 ## Frequently Asked Questions
 
 - I have an {ATI 2xxx/3xxx ,NVIDIA 5/6/7-series} video card and it doesn't work!

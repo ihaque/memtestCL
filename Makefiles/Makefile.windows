@@ -1,4 +1,7 @@
-OPENCL_VENDOR=NV # NV, NV64, AMD, AMD64
+#build from Native 64 bit tools command prompt in the project root with
+#nmake -f Makefiles\Makefile.windows
+#Building with NV64 vendor can provide binary that at runtime works fine on both amd, nvidia and intel
+OPENCL_VENDOR=NV64 # NV, NV64, AMD, AMD64
 
 !if "$(OPENCL_VENDOR)" == "NV"
 OPENCL_DIR="C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v5.5"
@@ -7,7 +10,7 @@ OPENCL_LIB=$(OPENCL_DIR)\lib\Win32\OpenCL.lib
 !endif
 
 !if "$(OPENCL_VENDOR)" == "NV64"
-OPENCL_DIR="\CUDA"
+OPENCL_DIR="C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v8.0"
 OPENCL_INC=$(OPENCL_DIR)\include
 OPENCL_LIB=$(OPENCL_DIR)\lib\x64\OpenCL.lib
 !endif

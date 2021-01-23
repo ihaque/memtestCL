@@ -139,7 +139,7 @@ uint memtestState::allocate(uint mbToTest) {
 		cl_int err;
 		try {
             // AMD's OpenCL will throw an error on allocation, NVIDIA on use. So both alloc and try to init.
-            devTestMem = clCreateBuffer(ctx,CL_MEM_READ_WRITE,megsToTest*1048576UL,NULL,&err);
+            devTestMem = clCreateBuffer(ctx,CL_MEM_READ_WRITE,megsToTest*1048576ULL,NULL,&err);
             if (err != CL_SUCCESS) {
                 cerr << "Unable to allocate OpenCL memory: "<<descriptionOfError(err)<<endl;
                 throw 1;
@@ -192,7 +192,7 @@ bool memtestState::gpuMemoryBandwidth(double& bandwidth,uint mbToTest,uint iters
     
     uint start = getTimeMilliseconds();
     for (uint i = 0; i < iters; i++) {
-        err = clEnqueueCopyBuffer(cq,devTestMem,devTestMem,0,mbToTest*1048576UL,mbToTest*1048576UL,0,NULL,events+i);
+        err = clEnqueueCopyBuffer(cq,devTestMem,devTestMem,0,mbToTest*1048576ULL,mbToTest*1048576ULL,0,NULL,events+i);
         if (err != CL_SUCCESS) {
             cerr << "Status of clEnqueueCopyBuffer was "<<descriptionOfError(err)<<endl;
             return false;
